@@ -20,7 +20,7 @@ trap finish exit
 
 if [ ! -f ${DEV_CONTAINER} ]
 then
-  echo Downloading CoreOS developer container image
+  echo Downloading CoreOS ${COREOS_TRACK} developer image ${COREOS_VERSION}
   SITE=${COREOS_TRACK}.release.core-os.net/amd64-usr
   curl -s -L https://${SITE}/${COREOS_VERSION}/coreos_developer_container.bin.bz2 \
     -z ${DEV_CONTAINER}.bz2 \
@@ -31,7 +31,7 @@ fi
 
 if [ ! -f ${DRIVER_ARCHIVE_PATH} ]
 then
-  echo Downloading Linux drivers
+  echo Downloading NVIDIA Linux drivers version ${DRIVER_VERSION}
   mkdir -p nvidia_installers
   SITE=us.download.nvidia.com/XFree86/Linux-x86_64
   curl -s -L http://${SITE}/${DRIVER_VERSION}/${DRIVER_ARCHIVE}.run \
