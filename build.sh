@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Build NVIDIA drivers for a given CoreOS version
+#
 
 DRIVER_VERSION=${1:-367.27}
 COREOS_TRACK=${2:-alpha}
@@ -9,10 +12,17 @@ DRIVER_ARCHIVE_PATH=${PWD}/nvidia_installers/${DRIVER_ARCHIVE}.run
 DEV_CONTAINER=coreos_developer_container.bin.${COREOS_VERSION}
 WORK_DIR=pkg/run_files/${COREOS_VERSION}
 
+function finish {
+  rm -Rf ${DEV_CONTAINER} tmp
+}
+
+trap finish exit
+
 if [ ! -f ${DEV_CONTAINER} ]
 then
   echo Downloading CoreOS developer container image
-  curl -s -L https://alpha.release.core-os.net/amd64-usr/${COREOS_VERSION}/coreos_developer_container.bin.bz2 \
+  SITE=${COREOS_TRACK}.release.core-os.net/amd64-usr
+  curl -s -L https://${SITE}/${COREOS_VERSION}/coreos_developer_container.bin.bz2 \
     -z ${DEV_CONTAINER}.bz2 \
     -o ${DEV_CONTAINER}.bz2
   echo Decompressing
@@ -37,11 +47,6 @@ chmod +x ${DRIVER_ARCHIVE}.run
 rm -Rf ./${DRIVER_ARCHIVE}
 ./${DRIVER_ARCHIVE}.run -x -s
 popd
-
-function finish {
- echo
-}
-trap finish exit
 
 sudo systemd-nspawn -i ${DEV_CONTAINER} --share-system \
      --bind=${PWD}/_container_build.sh:/build.sh --bind=${PWD}/${WORK_DIR}:/nvidia_installers \

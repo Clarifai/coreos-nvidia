@@ -1,4 +1,5 @@
 *.bz2
+last.*
 coreos_developer_container.bin.*
 nvidia_installers/
 pkg/
