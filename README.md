@@ -5,7 +5,7 @@ This set of scripts will cross-build a given version of NVIDIA drivers for a
 given version of CoreOS. It does so by running the build inside the developer
 container image associated with the OS version, i.e. using the same compiler
 toolchain and kernel configuration used by the system. The scripts can be
-started from a machine running __any__ kind of Linux distribution: it
+started from a machine running _any_ kind of Linux distribution: it
 **doesn't** have to be CoreOS.
 
 ## Requirements:
@@ -20,7 +20,7 @@ started from a machine running __any__ kind of Linux distribution: it
 
 ## Usage:
 
-`./build.sh DRIVER_VERSION COREOS_TRACK COREOS_VERSION`
+<tt><a href="build.sh">build.sh</a> DRIVER_VERSION CHANNEL COREOS_VERSION</tt>
 
 e.g.
 
@@ -40,13 +40,13 @@ device nodes under `/dev/`, depends a lot on their particular provisioning
 (cloud-config, Ansible, etc.), so it is left as an exercise to the reader. A few
 tips:
 
-- on CoreOS, `/lib64`, `/usr/lib64` and co. all reside on a read-only
+- on CoreOS, `/lib64/`, `/usr/lib64/` and co. all reside on a read-only
 filesystem. You might need to create a new directory elsewhere and its location
 listed in a file under `/etc/ld.so.conf.d/`
 - depending on your intepretation of [FHS
-  specifications](http://refspecs.linuxfoundation.org/fhs.shtml), directories
-  under `/opt/` or `/srv/` might be an option. `/opt/bin/` is already in users'
-  search path, the `PATH` variable.
+specifications](http://refspecs.linuxfoundation.org/fhs.shtml), directories
+under `/opt/` or `/srv/` might be an option. `/opt/bin/` is already in users'
+search path, the `PATH` variable.
 
 ## Automating driver builds for new OS releases
 
@@ -56,14 +56,14 @@ released.
 
 ### Usage
 
-`./check.sh DRIVER_VERSION COREOS_TRACKS`
+`./check.sh DRIVER_VERSION COREOS_CHANNELS`
 
-where `COREOS_TRACKS` defaults to `"alpha beta stable"`. Example:
+where `COREOS_CHANNELS` defaults to `"alpha beta stable"`. Example:
 
 `./check.sh 367.27 "beta stable"`
 
 The first time, it will build drivers for the most recent two releases of each
-track (just because). Upon subsequent invocations, it will build only newer
-releases it hasn't built before — and still only two per track at most. The
+channel (just because). Upon subsequent invocations, it will build only newer
+releases it hasn't built before — and still only two per channel at most. The
 script expects to live in a writable directory which is persisted across runs
 and includes the other scripts.
