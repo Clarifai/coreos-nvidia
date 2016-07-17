@@ -62,8 +62,8 @@ where `COREOS_CHANNELS` defaults to `"alpha beta stable"`. Example:
 
 `./check.sh 367.27 "beta stable"`
 
-The first time, it will build drivers for the most recent two releases of each
-channel (just because). Upon subsequent invocations, it will build only newer
-releases it hasn't built before — and still only two per channel at most. The
-script expects to live in a writable directory which is persisted across runs
-and includes the other scripts.
+The first time, it will build drivers for the most recent release of each given
+channel. Upon subsequent invocations, it will build only newer releases it
+hasn't built before — and still only the most recent one per channel. The script
+expects to live in a writable directory which is persisted across runs and
+includes the other scripts.
