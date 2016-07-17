@@ -33,7 +33,8 @@ if [ ! -f ${DRIVER_ARCHIVE_PATH} ]
 then
   echo Downloading Linux drivers
   mkdir -p nvidia_installers
-  curl -s -L http://us.download.nvidia.com/XFree86/Linux-x86_64/${DRIVER_VERSION}/${DRIVER_ARCHIVE}.run \
+  SITE=us.download.nvidia.com/XFree86/Linux-x86_64
+  curl -s -L http://${SITE}/${DRIVER_VERSION}/${DRIVER_ARCHIVE}.run \
     -z ${DRIVER_ARCHIVE_PATH} \
     -o ${DRIVER_ARCHIVE_PATH}
 fi
@@ -49,9 +50,11 @@ rm -Rf ./${DRIVER_ARCHIVE}
 popd
 
 sudo systemd-nspawn -i ${DEV_CONTAINER} --share-system \
-     --bind=${PWD}/_container_build.sh:/build.sh --bind=${PWD}/${WORK_DIR}:/nvidia_installers \
-     /bin/bash -x /build.sh ${DRIVER_VERSION}
+  --bind=${PWD}/_container_build.sh:/build.sh \
+  --bind=${PWD}/${WORK_DIR}:/nvidia_installers \
+  /bin/bash -x /build.sh ${DRIVER_VERSION}
 
 sudo chown -R ${UID}:${GROUPS[0]} ${PWD}/${WORK_DIR}
 
-bash -x _export.sh ${WORK_DIR}/*-${DRIVER_VERSION} ${DRIVER_VERSION} ${COREOS_VERSION}-${DRIVER_VERSION}
+bash -x _export.sh ${WORK_DIR}/*-${DRIVER_VERSION} \
+  ${DRIVER_VERSION} ${COREOS_VERSION}-${DRIVER_VERSION}
