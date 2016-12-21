@@ -20,14 +20,16 @@ started from a machine running _any_ kind of Linux distribution: it
 
 ## Usage:
 
-<tt><a href="build.sh">build.sh</a> DRIVER_VERSION CHANNEL COREOS_VERSION</tt>
+<tt><a href="build.sh">build.sh</a> [--keep] DRIVER_VERSION CHANNEL COREOS_VERSION</tt>
 
 e.g.
 
 `./build.sh 367.27 alpha 1097.0.0`
 
 The scripts will download both the official NVIDIA archive and the CoreOS
-developer images, caching them afterwards. It will then create three archives:
+developer images, caching them afterwards. If you pass the `--keep` flag, the
+temporary container used for building will be preserved after the run; this is
+helpful for debugging purposes. The scripts will then create three archives:
 
 ```
 libraries-[DRIVER_VERSION].tar.bz2

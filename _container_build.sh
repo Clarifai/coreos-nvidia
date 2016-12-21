@@ -7,7 +7,7 @@ emerge-gitclone
 
 emerge -gKq coreos-sources
 cd /usr/src/linux
-cp /lib/modules/*-coreos/build/.config .config
+cp /lib/modules/*-coreos*/build/.config .config
 
 make olddefconfig
 make modules_prepare

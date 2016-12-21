@@ -3,17 +3,28 @@
 # Build NVIDIA drivers for a given CoreOS version
 #
 
-DRIVER_VERSION=${1:-367.27}
-COREOS_TRACK=${2:-alpha}
-COREOS_VERSION=${3:-1097.0.0}
+if [ x"$1" == x"--keep" ]
+then
+  KEEP_CONTAINER=1
+  shift
+fi
+
+DRIVER_VERSION=${1:-367.57}
+COREOS_TRACK=${2:-beta}
+COREOS_VERSION=${3:-1185.5.0}
 
 DRIVER_ARCHIVE=NVIDIA-Linux-x86_64-${DRIVER_VERSION}
 DRIVER_ARCHIVE_PATH=${PWD}/nvidia_installers/${DRIVER_ARCHIVE}.run
 DEV_CONTAINER=coreos_developer_container.bin.${COREOS_VERSION}
 WORK_DIR=pkg/run_files/${COREOS_VERSION}
+ORIGINAL_DIR=${PWD}
 
 function finish {
-  rm -Rf ${DEV_CONTAINER} tmp
+  if [ "${KEEP_CONTAINER}" != "1" ]
+  then
+    cd ${ORIGINAL_DIR}
+    rm -Rf ${DEV_CONTAINER} ${WORK_DIR}/${DRIVER_ARCHIVE} tmp
+  fi
 }
 
 trap finish exit
@@ -43,11 +54,11 @@ rm -Rf ${PWD}/tmp
 mkdir -p ${PWD}/tmp ${WORK_DIR}
 cp -ul ${DRIVER_ARCHIVE_PATH} ${WORK_DIR}
 
-pushd ${WORK_DIR}
+cd ${WORK_DIR}
 chmod +x ${DRIVER_ARCHIVE}.run
 rm -Rf ./${DRIVER_ARCHIVE}
 ./${DRIVER_ARCHIVE}.run -x -s
-popd
+cd ${ORIGINAL_DIR}
 
 sudo systemd-nspawn -i ${DEV_CONTAINER} --share-system \
   --bind=${PWD}/_container_build.sh:/build.sh \
