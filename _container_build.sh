@@ -25,6 +25,8 @@ set -e
 trap finish exit
 
 emerge-gitclone
+. /usr/share/coreos/release
+git -C /var/lib/portage/coreos-overlay checkout build-${COREOS_RELEASE_VERSION%%.*}
 emerge -${EMERGE_SOURCE_FLAGS}q --jobs 4 --load-average 4 coreos-sources
 
 cd /usr/src/linux
