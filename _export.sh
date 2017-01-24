@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 ARTIFACT_DIR=$1
 VERSION=$2
 COMBINED_VERSION=$3
