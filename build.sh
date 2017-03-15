@@ -26,9 +26,20 @@ done
 echo "Keeping container around after build: ${KEEP_CONTAINER}"
 echo "Additional flags: ${EMERGE_SOURCES}"
 
-DRIVER_VERSION=${1:-367.57}
-COREOS_TRACK=${2:-beta}
-COREOS_VERSION=${3:-1185.5.0}
+COREOS_TRACK_DEFAULT=beta
+COREOS_VERSION_DEFAULT=1185.5.0
+# If we are on CoreOS by default build for the current CoreOS version
+if [[ -f /etc/lsb-release && -f /etc/coreos/update.conf ]]; then
+    source /etc/lsb-release
+    source /etc/coreos/update.conf
+    
+    COREOS_TRACK_DEFAULT=$GROUP
+    COREOS_VERSION_DEFAULT=$DISTRIB_RELEASE
+fi
+
+DRIVER_VERSION=${1:-375.20}
+COREOS_TRACK=${2:-$COREOS_TRACK_DEFAULT}
+COREOS_VERSION=${3:-$COREOS_VERSION_DEFAULT}
 
 DRIVER_ARCHIVE=NVIDIA-Linux-x86_64-${DRIVER_VERSION}
 DRIVER_ARCHIVE_PATH=${PWD}/nvidia_installers/${DRIVER_ARCHIVE}.run

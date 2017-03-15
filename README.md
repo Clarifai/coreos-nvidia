@@ -20,7 +20,7 @@ started from a machine running _any_ kind of Linux distribution: it
 
 ## Usage:
 
-<tt><a href="build.sh">build.sh</a> [--keep] DRIVER_VERSION CHANNEL COREOS_VERSION</tt>
+<tt><a href="build.sh">build.sh</a> [--keep] DRIVER_VERSION [CHANNEL] [COREOS_VERSION]</tt>
 
 e.g.
 
@@ -33,6 +33,7 @@ helpful for debugging purposes. The scripts will then create three archives:
 
 ```
 libraries-[DRIVER_VERSION].tar.bz2
+libraries-tls-[DRIVER_VERSION].tar.bz2
 tools-[DRIVER_VERSION].tar.bz2
 modules-[COREOS_VERSION]-[DRIVER_VERSION].tar.bz2
 ```

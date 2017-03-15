@@ -1,0 +1,9 @@
+[Unit]
+Description=Load NVIDIA module
+After=local-fs.target
+
+[Service]
+ExecStart=/opt/bin/nvidia-start.sh
+
+[Install]
+WantedBy=multi-user.target
