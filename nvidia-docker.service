@@ -1,0 +1,26 @@
+[Unit]
+Description=NVIDIA Docker plugin
+Documentation=https://github.com/NVIDIA/nvidia-docker/wiki
+After=local-fs.target network.target nvidia-start.service
+Wants=docker.service
+
+[Service]
+Environment="SOCK_DIR=/var/lib/nvidia-docker"
+Environment="SPEC_FILE=/etc/docker/plugins/nvidia-docker.spec"
+Environment="PATH=/opt/bin/:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+
+#User=nvidia-docker
+User=root
+#PermissionsStartOnly=true
+Restart=on-failure
+RestartSec=1
+TimeoutStartSec=0
+TimeoutStopSec=20
+
+ExecStart=/opt/bin/nvidia-docker-plugin -s $SOCK_DIR
+ExecStartPost=/bin/sh -c '/bin/mkdir -p $( dirname $SPEC_FILE )'
+ExecStartPost=/bin/sh -c '/bin/echo unix://$SOCK_DIR/nvidia-docker.sock > $SPEC_FILE'
+ExecStopPost=/bin/rm -f $SPEC_FILE
+
+[Install]
+WantedBy=multi-user.target

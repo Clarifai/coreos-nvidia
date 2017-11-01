@@ -1,0 +1,31 @@
+# Tag the device as master-of-seat so that logind is happy
+# (see LP: #1365336)
+SUBSYSTEM=="pci", ATTRS{vendor}=="0x10de", DRIVERS=="nvidia", TAG+="seat", TAG+="master-of-seat"
+
+# Start and stop nvidia-persistenced on power on and power off
+# respectively
+ACTION=="add" DEVPATH=="/bus/acpi/drivers/NVIDIA ACPI Video Driver" SUBSYSTEM=="drivers" RUN+="/bin/systemctl start --no-block nvidia-persistenced.service"
+ACTION=="remove" DEVPATH=="/bus/acpi/drivers/NVIDIA ACPI Video Driver" SUBSYSTEM=="drivers" RUN+="/bin/systemctl stop --no-block nvidia-persistenced"
+
+# Start and stop nvidia-persistenced when loading and unloading
+# the driver
+ACTION=="add" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/bin/systemctl start --no-block nvidia-persistenced.service"
+ACTION=="remove" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/bin/systemctl stop --no-block nvidia-persistenced"
+
+# Load and unload nvidia-modeset module
+ACTION=="add" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/opt/bin/nvidia-insmod.sh nvidia-modeset.ko"
+ACTION=="remove" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/usr/sbin/rmmod -r nvidia-modeset"
+
+# Load and unload nvidia-drm module
+ACTION=="add" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/opt/bin/nvidia-insmod.sh nvidia-drm.ko"
+ACTION=="remove" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/usr/sbin/rmmod nvidia-drm"
+
+# Load and unload nvidia-uvm module
+ACTION=="add" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/opt/bin/nvidia-insmod.sh nvidia-uvm.ko"
+ACTION=="remove" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/usr/sbin/rmmod -r nvidia-uvm"
+
+# This will create the device nvidia device nodes
+ACTION=="add" DEVPATH=="/module/nvidia" SUBSYSTEM=="module" RUN+="/opt/bin/nvidia-smi"
+
+# Create the device node for the nvidia-uvm module
+ACTION=="add" DEVPATH=="/module/nvidia_uvm" SUBSYSTEM=="module" RUN+="/opt/bin/create-uvm-dev-node.sh"

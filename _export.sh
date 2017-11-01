@@ -11,5 +11,6 @@ nvidia-persistenced nvidia-settings"
 
 # Create archives with no paths
 tar -C ${ARTIFACT_DIR} -cvj $(basename -a ${ARTIFACT_DIR}/*.so.*) > libraries-${VERSION}.tar.bz2
+tar -C ${ARTIFACT_DIR}/tls -cvj $(basename -a ${ARTIFACT_DIR}/tls/*.so.*) > libraries-tls-${VERSION}.tar.bz2
 tar -C ${ARTIFACT_DIR} -cvj ${TOOLS} > tools-${VERSION}.tar.bz2
 tar -C ${ARTIFACT_DIR}/kernel -cvj $(basename -a ${ARTIFACT_DIR}/kernel/*.ko) > modules-${COMBINED_VERSION}.tar.bz2
