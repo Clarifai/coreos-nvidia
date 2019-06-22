@@ -13,7 +13,7 @@ while :; do
   shift
 done
 
-
+export IGNORE_MISSING_MODULE_SYMVERS=1
 VERSION=$1
 echo Building ${VERSION}
 
